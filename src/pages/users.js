@@ -10,9 +10,10 @@ const ListWithPagination = withPagination(options)(List, Pagination);
 export const Users = props => {
   const fetchUsers = async query => {
     const {
-      data: { results }
+      data: { count, results }
     } = await axios.get(`/people${query}`);
-    return { data: results };
+
+    return { data: results, count: Math.ceil(count / 10) };
   };
 
   return (

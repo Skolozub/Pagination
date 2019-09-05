@@ -1,9 +1,22 @@
 import React from "react";
+import styled from "styled-components";
 
 export const List = props => (
-  <div>
+  <Wrapper>
     {props.data.map(({ name }) => (
-      <div key={name}>{name}</div>
+      <Item key={name}>{name}</Item>
     ))}
-  </div>
+  </Wrapper>
 );
+
+const Wrapper = styled.ul`
+  padding-left: 0;
+`;
+const Item = styled.li`
+  position: relative;
+  display: block;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: -1px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+`;

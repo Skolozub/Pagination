@@ -16,8 +16,8 @@ export const withPagination = options => (
         location: { search }
       } = this.props;
 
-      const { data } = await fetchData(search);
-      this.setState({ data, params: decodeGetParams(search) });
+      const { data, count } = await fetchData(search);
+      this.setState({ data, count, params: decodeGetParams(search) });
     };
 
     componentDidUpdate = async prevProps => {
@@ -27,8 +27,8 @@ export const withPagination = options => (
       } = this.props;
 
       if (prevProps.location.search !== search) {
-        const { data } = await fetchData(search);
-        this.setState({ data, params: decodeGetParams(search) });
+        const { data, count } = await fetchData(search);
+        this.setState({ data, count, params: decodeGetParams(search) });
       }
     };
 
@@ -37,7 +37,7 @@ export const withPagination = options => (
     state = {
       data: [],
       params: {},
-      count: 9
+      count: 1
     };
 
     render = () => (
