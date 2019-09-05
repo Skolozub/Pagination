@@ -7,28 +7,32 @@ export const withPagination = options => (
 ) =>
   class WithPaginationHOC extends Component {
     // -----------------Methods-------------------
+
+    paginate = async () => {
+      const {
+        history,
+        location: { pathname, search },
+        fetchData
+      } = this.props;
+
+      if (!search) history.replace(`${pathname}?page=1`);
+
+      this.setState({ params: decodeGetParams(search) });
+
+      const { data, count } = await fetchData(search);
+      this.setState({ data, count });
+    };
+
     // -------------------------------------------
     // ----------------Lifecycle------------------
 
-    componentDidMount = async () => {
-      const { fetchData } = this.props;
-      const {
-        location: { search }
-      } = this.props;
-
-      const { data, count } = await fetchData(search);
-      this.setState({ data, count, params: decodeGetParams(search) });
+    componentDidMount = () => {
+      this.paginate();
     };
 
-    componentDidUpdate = async prevProps => {
-      const { fetchData } = this.props;
-      const {
-        location: { search }
-      } = this.props;
-
-      if (prevProps.location.search !== search) {
-        const { data, count } = await fetchData(search);
-        this.setState({ data, count, params: decodeGetParams(search) });
+    componentDidUpdate = prevProps => {
+      if (prevProps.location.search !== this.props.location.search) {
+        this.paginate();
       }
     };
 
@@ -42,6 +46,7 @@ export const withPagination = options => (
 
     render = () => (
       <>
+        <PaginationComponent {...this.props} {...this.state} />
         <WrappedComponent {...this.props} {...this.state} />
         <PaginationComponent {...this.props} {...this.state} />
       </>

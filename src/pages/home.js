@@ -1,7 +1,9 @@
 import React from "react";
+import { Content } from "../components/content";
+import { H1 } from "../components/h1";
 
 export const Home = () => (
-  <div>
-    <h1>Home</h1>
-  </div>
+  <Content>
+    <H1>Home</H1>
+  </Content>
 );

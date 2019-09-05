@@ -1,16 +1,37 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import styled from "styled-components";
 
 export const Menu = props => (
-  <div>
-    <div>
-      <NavLink exact to="/">
+  <>
+    <Navigation>
+      <NavigationLink exact to="/" activeClassName="active">
         Home
-      </NavLink>
-      <NavLink exact to="/users/?page=1">
+      </NavigationLink>
+      <NavigationLink to="/users/" activeClassName="active">
         Users
-      </NavLink>
-    </div>
+      </NavigationLink>
+    </Navigation>
     {props.children}
-  </div>
+  </>
 );
+
+const Navigation = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #343a40;
+`;
+const NavigationLink = styled(NavLink)`
+  display: flex;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+  color: rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+  &:hover {
+    color: rgba(255, 255, 255, 0.75);
+  }
+  &.active {
+    color: #fff;
+  }
+`;
