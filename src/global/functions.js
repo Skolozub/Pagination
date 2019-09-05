@@ -8,5 +8,7 @@ export const decodeGetParams = str =>
       return { ...acc, [key]: value };
     }, {});
 
-export const encodeGetParams = arr =>
-  `?${arr.map(([key, value]) => `${key}=${value}`).join("&")}`;
+export const encodeGetParams = obj =>
+  `?${Object.entries(obj)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&")}`;

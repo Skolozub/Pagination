@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { decodeGetParams, encodeGetParams } from "../functions";
-import { history } from "../index";
+import { decodeGetParams } from "../global/functions";
 
 export const withPagination = options => (
   WrappedComponent,
@@ -8,52 +7,28 @@ export const withPagination = options => (
 ) =>
   class WithPaginationHOC extends Component {
     // -----------------Methods-------------------
-
-    setParams = params =>
-      this.setState(state => ({ ...state, params: decodeGetParams(params) }));
-
-    changePage = (step, page) => {
-      const {
-        location: { pathname }
-      } = history;
-      const { params } = this.state;
-
-      const newPage = page || Number(params.page) + step;
-
-      const changedParams = Object.entries(params).map(([key, value]) => [
-        key,
-        key === "page" ? newPage : value
-      ]);
-
-      history.push(`${pathname}${encodeGetParams(changedParams)}`);
-    };
-
     // -------------------------------------------
     // ----------------Lifecycle------------------
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
       const { fetchData } = this.props;
       const {
         location: { search }
-      } = history;
-      console.log("mount", decodeGetParams(search));
-      this.setState({ params: { a: 1 } });
-      // this.setParams(search);
-      // const data = await fetchData(search);
-      // this.setState({ data });
+      } = this.props;
+
+      const { data } = await fetchData(search);
+      this.setState({ data, params: decodeGetParams(search) });
     };
 
-    componentDidUpdate = prevProps => {
+    componentDidUpdate = async prevProps => {
       const { fetchData } = this.props;
       const {
         location: { search }
-      } = history;
-      console.log(prevProps.location.search, "-", search);
+      } = this.props;
 
       if (prevProps.location.search !== search) {
-        // this.setParams(search);
-        // const data = await fetchData(search);
-        // this.setState({ data });
+        const { data } = await fetchData(search);
+        this.setState({ data, params: decodeGetParams(search) });
       }
     };
 
@@ -61,19 +36,14 @@ export const withPagination = options => (
 
     state = {
       data: [],
-      params: {}
+      params: {},
+      count: 9
     };
 
-    render = () => {
-      return (
-        <>
-          {/* <WrappedComponent {...this.props} {...this.state} />
-          <PaginationComponent
-            {...this.props}
-            {...this.state}
-            changePage={this.changePage}
-          /> */}
-        </>
-      );
-    };
+    render = () => (
+      <>
+        <WrappedComponent {...this.props} {...this.state} />
+        <PaginationComponent {...this.props} {...this.state} />
+      </>
+    );
   };

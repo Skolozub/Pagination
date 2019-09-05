@@ -3,14 +3,11 @@ import ReactDOM from "react-dom";
 import { Router, Switch, Route } from "react-router";
 import { createBrowserHistory } from "history";
 import axios from "axios";
-import { Home } from "./home";
+import { Home } from "./pages/home";
 import { Users } from "./pages/users";
-import { Menu } from "./menu";
+import { Menu } from "./components/menu";
 
-export const history = createBrowserHistory();
-
-export const gg = "123";
-
+const history = createBrowserHistory();
 axios.defaults.baseURL = "https://swapi.co/api";
 
 const App = () => (
