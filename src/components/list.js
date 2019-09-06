@@ -1,11 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
-export const List = props => (
+export const List = ({ data, isNoData = data.length === 0, isLoading }) => (
   <Wrapper>
-    {props.data.map(({ name }) => (
-      <Item key={name}>{name}</Item>
-    ))}
+    {isLoading ? (
+      <Item>Loading data...</Item>
+    ) : isNoData ? (
+      <Item>No data.</Item>
+    ) : (
+      data.map(({ name }) => <Item key={name}>{name}</Item>)
+    )}
   </Wrapper>
 );
 

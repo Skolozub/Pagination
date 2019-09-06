@@ -15,23 +15,25 @@ export const withPagination = options => (
         fetchData
       } = this.props;
 
-      if (!search) history.replace(`${pathname}?page=1`);
+      const params = decodeGetParams(search);
+      if (!params.page) return history.replace(`${pathname}?page=1`);
 
-      this.setState({ params: decodeGetParams(search) });
+      this.setState({ params, isLoading: true });
 
       const { data, count } = await fetchData(search);
-      this.setState({ data, count });
+      this.setState({ data, count, isLoading: false });
     };
 
-    // -------------------------------------------
     // ----------------Lifecycle------------------
 
     componentDidMount = () => {
       this.paginate();
     };
 
-    componentDidUpdate = prevProps => {
-      if (prevProps.location.search !== this.props.location.search) {
+    componentDidUpdate = () => {
+      const params = decodeGetParams(this.props.location.search);
+
+      if (String(this.state.params.page) !== String(params.page)) {
         this.paginate();
       }
     };
@@ -41,7 +43,8 @@ export const withPagination = options => (
     state = {
       data: [],
       params: {},
-      count: 1
+      count: 1,
+      isLoading: true
     };
 
     render = () => (
