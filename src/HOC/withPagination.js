@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { decodeGetParams } from "../global/functions";
+import { decodeGetParams, encodeGetParams } from "../global/functions";
 
 export const withPagination = options => (
   WrappedComponent,
@@ -16,7 +16,11 @@ export const withPagination = options => (
       } = this.props;
 
       const params = decodeGetParams(search);
-      if (!params.page) return history.replace(`${pathname}?page=1`);
+      if (!params.page) {
+        const paramsWithPage = { ...params, page: 1 };
+        const searchWithPage = encodeGetParams(paramsWithPage);
+        return history.replace(`${pathname}${searchWithPage}`);
+      }
 
       this.setState({ params, isLoading: true });
 
