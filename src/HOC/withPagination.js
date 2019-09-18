@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { decodeGetParams, encodeGetParams } from "../global/functions";
 
 export const withPagination = options => (
@@ -6,6 +7,13 @@ export const withPagination = options => (
   PaginationComponent
 ) =>
   class WithPaginationHOC extends Component {
+    static propTypes = {
+      fetchData: PropTypes.func.isRequired,
+      location: PropTypes.object.isRequired,
+      pathname: PropTypes.string,
+      search: PropTypes.string,
+      count: PropTypes.number
+    };
     // -----------------Methods-------------------
 
     paginate = async () => {
