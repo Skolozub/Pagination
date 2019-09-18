@@ -4,8 +4,7 @@ export const decodeGetParams = str =>
     .split("&")
     .reduce((acc, item) => {
       const [key, value] = item.split("=");
-
-      return { ...acc, [key]: value };
+      return key ? { ...acc, [key]: value } : acc;
     }, {});
 
 export const encodeGetParams = obj =>
