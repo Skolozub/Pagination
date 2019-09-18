@@ -11,8 +11,7 @@ export const withPagination = options => (
       fetchData: PropTypes.func.isRequired,
       location: PropTypes.object.isRequired,
       pathname: PropTypes.string,
-      search: PropTypes.string,
-      count: PropTypes.number
+      search: PropTypes.string
     };
 
     // -----------------Methods-------------------
@@ -30,7 +29,7 @@ export const withPagination = options => (
       const { location } = this.props;
       const params = decodeGetParams(location.search);
 
-      return { page: 1, ...params };
+      return { ...params, page: params.page ? Number(params.page) : 1 };
     };
 
     // ----------------Lifecycle------------------
@@ -43,7 +42,7 @@ export const withPagination = options => (
     componentDidUpdate = () => {
       const { params: prevParams } = this.state;
       const newParams = this.parseURLParamsAndAddPage();
-      const pageHasChanged = String(prevParams.page) !== String(newParams.page);
+      const pageHasChanged = prevParams.page !== newParams.page;
 
       if (pageHasChanged) this.paginate(newParams);
     };
@@ -52,7 +51,9 @@ export const withPagination = options => (
 
     state = {
       data: [],
-      params: {},
+      params: {
+        page: 1
+      },
       count: 1,
       isLoading: true
     };
