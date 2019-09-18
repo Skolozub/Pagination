@@ -14,40 +14,38 @@ export const withPagination = options => (
       search: PropTypes.string,
       count: PropTypes.number
     };
+
     // -----------------Methods-------------------
 
-    paginate = async () => {
-      const {
-        history,
-        location: { pathname, search },
-        fetchData
-      } = this.props;
-
-      const params = decodeGetParams(search);
-      if (!params.page) {
-        const paramsWithPage = { ...params, page: 1 };
-        const searchWithPage = encodeGetParams(paramsWithPage);
-        return history.replace(`${pathname}${searchWithPage}`);
-      }
+    paginate = async params => {
+      const { fetchData } = this.props;
+      const search = encodeGetParams(params);
 
       this.setState({ params, isLoading: true });
-
       const { data, count } = await fetchData(search);
       this.setState({ data, count, isLoading: false });
+    };
+
+    parseURLParamsAndAddPage = () => {
+      const { location } = this.props;
+      const params = decodeGetParams(location.search);
+
+      return { page: 1, ...params };
     };
 
     // ----------------Lifecycle------------------
 
     componentDidMount = () => {
-      this.paginate();
+      const newParams = this.parseURLParamsAndAddPage();
+      this.paginate(newParams);
     };
 
     componentDidUpdate = () => {
-      const params = decodeGetParams(this.props.location.search);
+      const { params: prevParams } = this.state;
+      const newParams = this.parseURLParamsAndAddPage();
+      const pageHasChanged = String(prevParams.page) !== String(newParams.page);
 
-      if (String(this.state.params.page) !== String(params.page)) {
-        this.paginate();
-      }
+      if (pageHasChanged) this.paginate(newParams);
     };
 
     // -------------------------------------------
