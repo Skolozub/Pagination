@@ -20,10 +20,12 @@ export const withPagination = options => (
       const { fetchData } = this.props;
       const search = encodeGetParams(params);
 
-      this.setState({ params, isLoading: true });
+      this.setState({ isLoading: true });
       const { data, count } = await fetchData(search);
       this.setState({ data, count, isLoading: false });
     };
+
+    setParams = params => this.setState({ params });
 
     parseURLParamsAndAddPage = () => {
       const { location } = this.props;
@@ -35,15 +37,26 @@ export const withPagination = options => (
     // ----------------Lifecycle------------------
 
     componentDidMount = () => {
-      const newParams = this.parseURLParamsAndAddPage();
+      const {
+        location: { search }
+      } = this.props;
+      const newParams = this.parseURLParamsAndAddPage(search);
+
+      this.setParams(newParams);
       this.paginate(newParams);
     };
 
-    componentDidUpdate = () => {
+    componentDidUpdate = prevProps => {
+      const {
+        location: { search }
+      } = this.props;
       const { params: prevParams } = this.state;
-      const newParams = this.parseURLParamsAndAddPage();
-      const pageHasChanged = prevParams.page !== newParams.page;
+      const newParams = this.parseURLParamsAndAddPage(search);
 
+      const paramsHasChanged = prevProps.location.search !== search;
+      if (paramsHasChanged) this.setParams(newParams);
+
+      const pageHasChanged = prevParams.page !== newParams.page;
       if (pageHasChanged) this.paginate(newParams);
     };
 
