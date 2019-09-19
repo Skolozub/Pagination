@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { decodeGetParams, encodeGetParams } from "../global/functions";
 
-export const withPagination = (WrappedComponent, PaginationComponent) =>
+export const withPagination = (...components) =>
   class WithPaginationHOC extends Component {
     static propTypes = {
       fetchData: PropTypes.func.isRequired,
@@ -70,9 +70,9 @@ export const withPagination = (WrappedComponent, PaginationComponent) =>
 
     render = () => (
       <>
-        <PaginationComponent {...this.props} {...this.state} />
-        <WrappedComponent {...this.props} {...this.state} />
-        <PaginationComponent {...this.props} {...this.state} />
+        {components.map(Component => (
+          <Component {...this.props} {...this.state} />
+        ))}
       </>
     );
   };
