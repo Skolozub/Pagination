@@ -1,4 +1,4 @@
-# Pagination with get params in URL
+# Pagination with get params in URL (HOC version)
 
 ## Install
 

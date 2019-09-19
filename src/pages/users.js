@@ -6,8 +6,7 @@ import { Pagination } from "../components/pagination";
 import { H1 } from "../components/h1";
 import { Content } from "../components/content";
 
-const options = {};
-const ListWithPagination = withPagination(options)(List, Pagination);
+const ListWithPagination = withPagination(List, Pagination);
 
 export const Users = props => {
   const fetchUsers = async query => {
